@@ -1,0 +1,115 @@
+################################################################################
+project:
+  name: MagicSquare
+  language: Python
+  purpose: 매직 스퀘어 도메인 문제를 ECB 아키텍처와 TDD로 구현하는 프로젝트
+  runtime: CPython 3.10+
+################################################################################
+code_style:
+  python_version: "3.10+"
+  style_guide: PEP8 엄격 준수
+  type_hints: 모든 함수 파라미터와 반환값에 필수
+  docstring: Google 스타일, 모든 public 메서드에 필수
+  max_line_length: 88
+################################################################################
+architecture:
+  pattern: ECB
+  layers:
+    boundary:
+      role: 외부 입출력 담당
+      examples:
+        - UI
+        - API
+        - CLI
+    control:
+      role: 비즈니스 로직 담당
+    entity:
+      role: 도메인 데이터 및 규칙 담당
+  dependency_direction:
+    - boundary -> control
+    - control -> entity
+    - boundary -> entity 직접 의존 금지
+    - entity -> control 의존 금지
+    - entity -> boundary 의존 금지
+################################################################################
+tdd_rules:
+  red_phase:
+    description: 테스트를 먼저 작성하고 실패를 확인해 요구사항을 검증하는 단계
+    rules:
+      - 구현 코드 작성 전 테스트 케이스를 먼저 작성한다.
+      - 테스트 실패 원인이 요구사항과 일치하는지 확인한다.
+      - 실패가 재현 가능해야 다음 단계로 진행한다.
+    must_not:
+      - 테스트 실패 확인 전에 구현 코드를 작성하지 않는다.
+      - 통과하는 테스트를 먼저 작성해 RED 단계를 생략하지 않는다.
+  green_phase:
+    description: 테스트를 통과시키기 위한 최소 구현만 수행하는 단계
+    rules:
+      - 현재 실패한 테스트를 통과시키는 최소 코드만 작성한다.
+      - 새 기능 확장보다 기존 실패 테스트 해소를 우선한다.
+      - 모든 테스트가 녹색 상태인지 확인한다.
+    must_not:
+      - 리팩터링을 수행하지 않는다.
+      - 필요 이상의 일반화/추상화를 추가하지 않는다.
+  refactor_phase:
+    description: 기능 변경 없이 코드 구조를 개선하는 단계
+    rules:
+      - 동작을 바꾸지 않고 가독성/중복/구조를 개선한다.
+      - 리팩터링 전후 전체 테스트를 실행해 동등 동작을 보장한다.
+      - 테스트 커버리지를 최소 기준 이상으로 유지한다.
+    must_not:
+      - 기능 추가 또는 기존 동작 변경을 수행하지 않는다.
+      - 커버리지를 낮추는 테스트 삭제/완화를 수행하지 않는다.
+################################################################################
+testing:
+  framework: pytest
+  pattern: AAA
+  coverage_minimum: "80%"
+  fixture_scope:
+    default: function
+    rules:
+      - 테스트 간 상태 공유가 필요 없으면 function 스코프를 사용한다.
+      - 무거운 초기화가 공통인 경우에만 module 또는 session 스코프를 사용한다.
+      - fixture는 목적이 드러나는 이름을 사용한다.
+  naming_convention: test_ 접두사 필수
+################################################################################
+forbidden:
+  - pattern: print()
+    reason: 디버그 출력이 표준 로깅 정책을 우회하고 테스트 신뢰성을 떨어뜨린다.
+    alternative: logging 모듈(레벨 기반 로깅) 또는 pytest 캡처 기능 사용
+  - pattern: 하드코딩 상수
+    reason: 변경 비용 증가 및 의미 불명확으로 유지보수성이 저하된다.
+    alternative: 의미 있는 상수명으로 entity 또는 설정 모듈에 선언
+  - pattern: except 단독 사용
+    reason: 예외 원인을 숨겨 디버깅과 장애 분석을 어렵게 만든다.
+    alternative: 구체 예외 타입 명시 및 예외 정보 로깅 후 재전파
+################################################################################
+file_structure:
+  # ECB 기준 권장 폴더 구조
+  # MagicSquare_XX/
+  # ├─ src/
+  # │  ├─ boundary/
+  # │  ├─ control/
+  # │  └─ entity/
+  # └─ tests/
+  #    ├─ boundary/
+  #    ├─ control/
+  #    └─ entity/
+  root: src
+  test_root: tests
+  layer_directories:
+    - boundary
+    - control
+    - entity
+################################################################################
+ai_behavior:
+  before_coding:
+    - 코드 생성 전 관련 테스트 파일을 먼저 확인한다.
+    - 변경 대상 기능의 ECB 레이어 위치를 먼저 판별한다.
+  during_coding:
+    - ECB 레이어 경계를 위반하는 import/호출을 만들지 않는다.
+    - 타입힌트 없는 함수를 생성하지 않는다.
+    - green_phase에서는 최소 구현만 작성하고 리팩터링하지 않는다.
+  after_coding:
+    - pytest를 실행해 회귀 여부를 확인한다.
+    - tdd_rules 위반이 감지되면 경고를 출력하고 원인을 명시한다.
