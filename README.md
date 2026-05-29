@@ -201,6 +201,32 @@ Concept → Business Rule → Scenario → Acceptance Criteria
 > 이 체크리스트는 [docs/test_plan.md](docs/test_plan.md) 기반으로 생성되었습니다.
 > 각 항목은 RED(실패 테스트 작성) 완료 시 체크합니다.
 
+### Golden Master 회귀 안전장치
+
+Refactoring 시작 전 구축.
+GREEN 완료 후 즉시 적용.
+
+#### 기준 파일 생성
+
+- [x] **GM-01:** `tests/golden_master_expected.txt` 생성
+- [x] **GM-02:** 정상 / 역순 / 오류 시나리오 추가 (GM-TC-01~05)
+- [x] **GM-03:** `git add tests/golden_master_expected.txt` (버전 관리 포함)
+
+#### 테스트 코드
+
+- [x] **GM-04:** `tests/test_golden_master_magic_square.py` 작성
+- [x] **GM-05:** approve 패턴 적용 (`--approve-golden`, `GOLDEN_MASTER_APPROVE=1`)
+- [x] **GM-06:** Golden Master 테스트 PASS 확인 (`pytest -m golden_master -v`)
+
+#### 회귀 보호
+
+- [x] **GM-07:** row-major 규칙 보호 (GM-TC-01, GM-TC-02)
+- [x] **GM-08:** 1-index 출력 보호 (GM-TC-01, GM-TC-02)
+- [x] **GM-09:** reverse 조합 fallback 보호 (GM-TC-02)
+- [x] **GM-10:** Error Contract 보호 (GM-TC-03 `E002`, GM-TC-04 `E005`, GM-TC-05)
+
+> 설계 문서: [docs/golden_master_approve_pattern.md](docs/golden_master_approve_pattern.md)
+
 ### Track A — UI / Boundary 테스트
 - [ ] TC-A-01: grid=None 입력 → 실패 결과 반환 (Happy Path of Failure)
 - [ ] TC-A-02: code가 정확히 "INVALID_SIZE" 문자열인지 검증

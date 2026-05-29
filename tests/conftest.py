@@ -4,7 +4,27 @@ Shared pytest fixtures — G0~G3 grids for entity/control GREEN tests.
 
 from __future__ import annotations
 
+import os
+
 import pytest
+
+
+def pytest_addoption(parser: pytest.Parser) -> None:
+    """Register Golden Master approve CLI flag."""
+    parser.addoption(
+        "--approve-golden",
+        action="store_true",
+        default=False,
+        help="Regenerate tests/golden_master_expected.txt from current solver output.",
+    )
+
+
+@pytest.fixture
+def golden_approve(request: pytest.FixtureRequest) -> bool:
+    """True when Golden Master baseline should be regenerated."""
+    cli_approve = request.config.getoption("--approve-golden")
+    env_approve = os.environ.get("GOLDEN_MASTER_APPROVE", "") == "1"
+    return cli_approve or env_approve
 
 G0: list[list[int]] = [
     [16, 2, 3, 13],
