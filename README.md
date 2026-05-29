@@ -440,20 +440,22 @@ GREEN 완료 후 즉시 적용.
 - [x] **RF-1-08:** `two_cell_solver.py` 26 — `UnsolvableDomainError` → Boundary `FailureResult` 매핑 — `solve_puzzle`에서 `E_NO_SOLUTION` 반환 · GM-TC-05 baseline 갱신
 - [x] **RF-1-09:** `ui_boundary.py` — 실제 adapter E2E (G1/G3) + GM → `UIBoundary` 경로 정렬 (M-7) — 기본 resolver · `capture_scenario_output` → `solve_puzzle` 경유
 
-### 2. 코드 구조 · 가독성 (DRY / 분해 / 상수·네이밍)
+### 2. 코드 구조 · 가독성 (DRY / 분해 / 상수·네이밍) ✅
 
 중복 제거, 함수 분해, 리터럴·이름 정리
 
-- [ ] **RF-2-01:** `ui_boundary.py` 13 — `solver_port` 파라미터 명명 정리
-- [ ] **RF-2-02:** `boundary/__init__.py` — `__all__` export 범위 정리
-- [ ] **RF-2-03:** `ports.py` 10 — docstring `"4x4"` 리터럴 상수화
-- [ ] **RF-2-04:** `input_validator.py` 29–35 — GREEN 단계 docstring 정리
-- [ ] **RF-2-05:** `input_validator.py` 53–80 — grid 3회 순회 헬퍼/VO 분리
-- [ ] **RF-2-06:** `two_cell_solver.py` 19–22 — Attempt 1·2 대칭 구조 공통화
-- [ ] **RF-2-07:** `two_cell_solver.py` 15 — `int[6]` 출력 길이 상수 도입
-- [ ] **RF-2-08:** `input_validator.py` 26–81 — `validate()` shape/blank/range/duplicate 분해
-- [ ] **RF-2-09:** `input_validator.py` 37–52 — `INVALID_SIZE` `FailureResult` 3회 중복 제거
-- [ ] **RF-2-10:** `contracts.py` 6, 18 — `"4x4"`, `"1~16"` 메시지 리터럴 상수화
+> **완료:** `refactor/refactor` · `pytest` **41 passed** · `golden_master` **5 passed**
+
+- [x] **RF-2-01:** `ui_boundary.py` 13 — `solver_port` 파라미터 명명 정리 — `completion_resolver` / `_completion_resolver`로 rename · 테스트 fixture 동기화
+- [x] **RF-2-02:** `boundary/__init__.py` — `__all__` export 범위 정리 — `UIBoundary`, `solve_puzzle`, `FailureResult`, 주요 오류 코드 export
+- [x] **RF-2-03:** `ports.py` 10 — docstring `"4x4"` 리터럴 상수화 — `GRID_SIZE` 기반 `_GRID_LABEL` f-string docstring
+- [x] **RF-2-04:** `input_validator.py` 29–35 — GREEN 단계 docstring 정리 — 검증 순서 중심 docstring으로 교체
+- [x] **RF-2-05:** `input_validator.py` 53–80 — grid 3회 순회 헬퍼/VO 분리 — `_validate_blank_count` / `_validate_cell_range` / `_validate_no_duplicates` (U-IN-08 short-circuit 순서 유지)
+- [x] **RF-2-06:** `two_cell_solver.py` 19–22 — Attempt 1·2 대칭 구조 공통화 — `_build_attempt()` 추출
+- [x] **RF-2-07:** `two_cell_solver.py` 15 — `int[6]` 출력 길이 상수 도입 — `entity/constants` `SOLUTION_VECTOR_LENGTH=6` · control/boundary re-export · GM assert 적용
+- [x] **RF-2-08:** `input_validator.py` 26–81 — `validate()` shape/blank/range/duplicate 분해 — `_validate_shape` + 단계별 private 메서드
+- [x] **RF-2-09:** `input_validator.py` 37–52 — `INVALID_SIZE` `FailureResult` 3회 중복 제거 — `_invalid_size()` 헬퍼
+- [x] **RF-2-10:** `contracts.py` 6, 18 — `"4x4"`, `"1~16"` 메시지 리터럴 상수화 — `GRID_SIZE_LABEL`, `CELL_VALUE_RANGE_LABEL` f-string 메시지
 
 ### 3. 테스트 · 회귀 안전망
 

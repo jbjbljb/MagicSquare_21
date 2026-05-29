@@ -7,7 +7,7 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
-from src.boundary.contracts import GRID_SIZE
+from src.boundary.contracts import GRID_SIZE, SOLUTION_VECTOR_LENGTH
 from src.boundary.schemas import FailureResult
 from src.boundary.solve_puzzle import solve_puzzle
 from src.entity.constants import CELL_VALUE_MAX, CELL_VALUE_MIN
@@ -156,7 +156,7 @@ def read_expected(path: Path | None = None) -> str:
 
 def assert_contract_int6(result: list[int]) -> None:
     """Verify int[6] envelope, 1-index coordinates, and value range."""
-    assert len(result) == 6
+    assert len(result) == SOLUTION_VECTOR_LENGTH
     row1, col1, num1, row2, col2, num2 = result
     for row, col in ((row1, col1), (row2, col2)):
         assert CELL_VALUE_MIN <= row <= GRID_SIZE

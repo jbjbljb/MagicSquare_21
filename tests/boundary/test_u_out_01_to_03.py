@@ -33,7 +33,7 @@ def mock_resolver() -> CompletionResolverPort:
 @pytest.fixture
 def ui_boundary(mock_resolver: CompletionResolverPort) -> UIBoundary:
     """Boundary entry with injectable Control port mock."""
-    return UIBoundary(solver_port=mock_resolver)
+    return UIBoundary(completion_resolver=mock_resolver)
 
 
 class TestUOut01To03:
@@ -97,7 +97,7 @@ class TestUOut01To03:
         """U-OUT-03 — reverse success may return n1 > n2 (D-SOL-02 alignment)."""
         # Given
         grid = [row[:] for row in G2]
-        ui_boundary = UIBoundary(solver_port=TwoCellCompletionResolver())
+        ui_boundary = UIBoundary(completion_resolver=TwoCellCompletionResolver())
 
         # When
         result = ui_boundary.solve(grid)

@@ -2,28 +2,44 @@
 
 from __future__ import annotations
 
+from src.control.constants import GRID_SIZE, SOLUTION_VECTOR_LENGTH
 from src.control.exceptions import UnsolvableDomainError
 from src.entity.services.empty_cell_locator import find_blank_coords
 from src.entity.services.magic_square_validator import is_magic_square
 from src.entity.services.missing_number_finder import find_not_exist_nums
 
+_GRID_LABEL = f"{GRID_SIZE}x{GRID_SIZE}"
+
 
 def solution(grid: list[list[int]]) -> list[int]:
-    """
-    Solve a partial 4×4 grid with exactly two blanks.
+    f"""
+    Solve a partial {_GRID_LABEL} grid with exactly two blanks.
 
-    Returns int[6] = [r1, c1, n1, r2, c2, n2] with 1-index coordinates.
+    Returns int[{SOLUTION_VECTOR_LENGTH}] = [r1, c1, n1, r2, c2, n2] with 1-index
+    coordinates.
     """
     (row1, col1), (row2, col2) = find_blank_coords(grid)
     small, large = find_not_exist_nums(grid)
     attempts = (
-        [row1, col1, small, row2, col2, large],
-        [row1, col1, large, row2, col2, small],
+        _build_attempt(row1, col1, small, row2, col2, large),
+        _build_attempt(row1, col1, large, row2, col2, small),
     )
     for candidate in attempts:
         if _is_valid_completion(grid, candidate):
             return candidate
     raise UnsolvableDomainError("No valid completion for the given grid")
+
+
+def _build_attempt(
+    row1: int,
+    col1: int,
+    num1: int,
+    row2: int,
+    col2: int,
+    num2: int,
+) -> list[int]:
+    """Assemble int[SOLUTION_VECTOR_LENGTH] candidate from coordinates and numbers."""
+    return [row1, col1, num1, row2, col2, num2]
 
 
 def _is_valid_completion(grid: list[list[int]], result: list[int]) -> bool:

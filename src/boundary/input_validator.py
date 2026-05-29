@@ -27,29 +27,49 @@ class InputValidator:
         self, grid: list[list[int]] | None
     ) -> FailureResult | None:
         """
-        Validate grid; return FailureResult on failure, None if valid so far.
+        Validate grid; return FailureResult on failure, None if valid.
 
-        GREEN (AC-FR-01-01): grid is None; shape must be GRID_SIZE x GRID_SIZE.
-        GREEN (U-IN-03~04): blank count must be REQUIRED_BLANK_COUNT.
-        GREEN (U-IN-05~05b): cell values must be BLANK_CELL_VALUE or CELL_VALUE_MIN..MAX.
-        GREEN (U-IN-06): non-zero values must be unique.
+        Checks shape, blank count, cell range, and non-zero uniqueness in order.
         """
+        shape_failure = self._validate_shape(grid)
+        if shape_failure is not None:
+            return shape_failure
+        assert grid is not None
+
+        blank_failure = self._validate_blank_count(grid)
+        if blank_failure is not None:
+            return blank_failure
+
+        range_failure = self._validate_cell_range(grid)
+        if range_failure is not None:
+            return range_failure
+
+        return self._validate_no_duplicates(grid)
+
+    def _invalid_size(self) -> FailureResult:
+        """Return standard INVALID_SIZE failure (PRD §8.1)."""
+        return FailureResult(
+            code=INVALID_SIZE_CODE,
+            message=INVALID_SIZE_MESSAGE,
+        )
+
+    def _validate_shape(
+        self, grid: list[list[int]] | None
+    ) -> FailureResult | None:
+        """Verify grid is GRID_SIZE x GRID_SIZE."""
         if grid is None:
-            return FailureResult(
-                code=INVALID_SIZE_CODE,
-                message=INVALID_SIZE_MESSAGE,
-            )
+            return self._invalid_size()
         if len(grid) != GRID_SIZE:
-            return FailureResult(
-                code=INVALID_SIZE_CODE,
-                message=INVALID_SIZE_MESSAGE,
-            )
+            return self._invalid_size()
         for row in grid:
             if len(row) != GRID_SIZE:
-                return FailureResult(
-                    code=INVALID_SIZE_CODE,
-                    message=INVALID_SIZE_MESSAGE,
-                )
+                return self._invalid_size()
+        return None
+
+    def _validate_blank_count(
+        self, grid: list[list[int]]
+    ) -> FailureResult | None:
+        """Verify exactly REQUIRED_BLANK_COUNT blank cells."""
         blank_count = sum(
             cell == BLANK_CELL_VALUE for row in grid for cell in row
         )
@@ -58,6 +78,12 @@ class InputValidator:
                 code=EMPTY_COUNT_CODE,
                 message=EMPTY_COUNT_MESSAGE,
             )
+        return None
+
+    def _validate_cell_range(
+        self, grid: list[list[int]]
+    ) -> FailureResult | None:
+        """Verify non-blank cells are within CELL_VALUE_MIN..CELL_VALUE_MAX."""
         for row in grid:
             for cell in row:
                 if cell == BLANK_CELL_VALUE:
@@ -67,6 +93,12 @@ class InputValidator:
                         code=CELL_RANGE_CODE,
                         message=CELL_RANGE_MESSAGE,
                     )
+        return None
+
+    def _validate_no_duplicates(
+        self, grid: list[list[int]]
+    ) -> FailureResult | None:
+        """Verify non-blank cell values are unique."""
         seen: set[int] = set()
         for row in grid:
             for cell in row:

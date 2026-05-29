@@ -7,6 +7,7 @@ from src.entity.constants import (
     GRID_SIZE,
     MAGIC_SUM,
     REQUIRED_BLANK_COUNT,
+    SOLUTION_VECTOR_LENGTH,
 )
 
 __all__ = [
@@ -16,4 +17,5 @@ __all__ = [
     "GRID_SIZE",
     "MAGIC_SUM",
     "REQUIRED_BLANK_COUNT",
+    "SOLUTION_VECTOR_LENGTH",
 ]

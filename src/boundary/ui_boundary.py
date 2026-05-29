@@ -13,12 +13,12 @@ class UIBoundary:
 
     def __init__(
         self,
-        solver_port: CompletionResolverPort | None = None,
+        completion_resolver: CompletionResolverPort | None = None,
     ) -> None:
         """Wire Control resolver port; defaults to ``TwoCellCompletionResolver``."""
-        self._solver_port = (
-            solver_port
-            if solver_port is not None
+        self._completion_resolver = (
+            completion_resolver
+            if completion_resolver is not None
             else TwoCellCompletionResolver()
         )
 
@@ -28,6 +28,6 @@ class UIBoundary:
         """
         Validate grid at Boundary; on failure return FailureResult.
 
-        On success delegate to solver_port and return int[6] result.
+        On success delegate to completion_resolver and return int[6] result.
         """
-        return solve_puzzle(grid, resolver=self._solver_port)
+        return solve_puzzle(grid, resolver=self._completion_resolver)
