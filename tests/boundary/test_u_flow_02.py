@@ -52,7 +52,7 @@ def mock_resolver() -> CompletionResolverPort:
 @pytest.fixture
 def ui_boundary_with_spy(mock_resolver: CompletionResolverPort) -> UIBoundary:
     """UIBoundary with resolve spy."""
-    return UIBoundary(solver_port=mock_resolver)
+    return UIBoundary(completion_resolver=mock_resolver)
 
 
 class TestUFlow02Extended:

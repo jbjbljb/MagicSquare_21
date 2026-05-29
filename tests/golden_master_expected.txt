@@ -49,4 +49,4 @@ Input:
 9 10 0 12
 13 14 15 16
 Error:
-UnsolvableDomainError
+E_NO_SOLUTION
