@@ -198,7 +198,7 @@ Concept → Business Rule → Scenario → Acceptance Criteria
 
 ## RED 단계 To-Do 리스트
 
-> 이 체크리스트는 test_plan.md 기반으로 생성되었습니다.
+> 이 체크리스트는 [docs/test_plan.md](docs/test_plan.md) 기반으로 생성되었습니다.
 > 각 항목은 RED(실패 테스트 작성) 완료 시 체크합니다.
 
 ### Track A — UI / Boundary 테스트
@@ -222,8 +222,168 @@ Concept → Business Rule → Scenario → Acceptance Criteria
 - [ ] 전체 TOTAL: 90%+
 
 ### 결함 목록 연결
-- [x] defect_list.md 생성 및 발견 결함 기록
+- [x] [docs/defect_list.md](docs/defect_list.md) 생성 및 발견 결함 기록
 - [ ] 모든 결함 수정 후 회귀 테스트 통과 확인
+
+---
+
+## GREEN 단계 To-Do 리스트
+
+> 기준 브랜치: `stabilize/green` · Track A Full RED + Dual-Track Skeleton  
+> 원칙: **한 GREEN 커밋 = 해당 테스트만 통과하는 최소 구현** (REFACTOR·AC 확장 금지)
+
+### RED 단계 커밋 묶음 (참고)
+
+- [ ] **RED-C-01** — 프로젝트 뼈대
+  - [ ] `pyproject.toml`
+  - [ ] `src/boundary/contracts.py`, `schemas.py`, `ports.py`
+  - [ ] `src/boundary/solve_puzzle.py` (RED stub)
+- [ ] **RED-C-02** — Track A Full RED
+  - [ ] `tests/boundary/test_fr01_01_invalid_size.py` (8건)
+- [ ] **RED-C-03** — Track A Skeleton
+  - [ ] `tests/boundary/test_u_in_04_to_08.py`
+  - [ ] `tests/boundary/test_u_out_01_to_03.py`
+  - [ ] `tests/boundary/test_u_flow_02.py`
+- [ ] **RED-C-04** — Track B Skeleton
+  - [ ] `tests/entity/test_d_loc_01.py`, `test_d_mis_01.py`
+  - [ ] `tests/entity/test_d_val_01_to_06.py`, `test_d_sol_01_to_04.py`
+- [ ] **RED-C-05** — Fixture placeholder
+  - [ ] `tests/conftest.py` (G0~G3 주석)
+  - [ ] `tests/entity/conftest.py` (placeholder)
+
+### Track A — Boundary GREEN
+
+#### G-C-01 · null 입력 (G-001~004) — 4건
+
+- [x] `test_none_grid_returns_invalid_size_failure_result`
+- [x] `test_none_grid_code_is_exactly_invalid_size_string`
+- [x] `test_none_grid_message_matches_prd_section_8_1_byte_for_byte`
+- [x] `test_none_grid_resolve_called_zero_times_isolation`
+- [x] **구현:** `grid is None` → `FailureResult(INVALID_SIZE)` + `resolve()` 0회
+- [ ] **검증:** 위 4건 `pytest -v` 통과 확인
+
+#### G-C-02 · shape 위반 (G-005~007) — 3건
+
+- [ ] `test_empty_list_grid_returns_invalid_size_failure` (`grid=[]`)
+- [ ] `test_four_empty_rows_grid_returns_invalid_size_failure` (`grid=[[]]*4`)
+- [ ] `test_3x4_grid_returns_invalid_size_failure` (3×4)
+- [ ] **구현:** `len(grid) != 4` 또는 `len(row) != 4` → `INVALID_SIZE`
+- [ ] **금지:** empty count / range / duplicate 분기 선행 구현
+- [ ] **검증:** 위 3건 + G-C-01 회귀 4건 통과
+
+#### G-C-03 · empty count (U-IN-03~04) — 2건
+
+> 선행: Skeleton → Full RED 전환 (`pytest.fail` → assert)
+
+- [ ] U-IN-03 — 빈칸 0개 (G0) → `E002`
+- [ ] U-IN-04 — `test_u_in_04_three_blanks_returns_e002` (빈칸 3개)
+- [ ] **구현:** `count(0) != 2` 검증
+- [ ] **검증:** U-IN-03~04 + G-C-01~02 회귀
+
+#### G-C-04 · cell range (U-IN-05, 05b) — 2건
+
+- [ ] U-IN-05 — `test_u_in_05_cell_value_17_returns_e004` (값 17)
+- [ ] U-IN-05b — `test_u_in_05b_negative_cell_returns_e004` (값 -1)
+- [ ] **구현:** `0` 외 `1~16` 밖 값 → `E004`
+- [ ] **검증:** U-IN-05~05b + 이전 GREEN 회귀
+
+#### G-C-05 · duplicate (U-IN-06) — 1건
+
+- [ ] U-IN-06 — `test_u_in_06_duplicate_non_zero_returns_e005`
+- [ ] **구현:** non-zero 중복 → `E005`
+- [ ] **검증:** U-IN-06 + 이전 GREEN 회귀
+
+#### G-C-06 · empty count 확장 + short-circuit (U-IN-07, 08) — 2건
+
+- [ ] U-IN-07 — `test_u_in_07_one_blank_returns_e002` (빈칸 1개)
+- [ ] U-IN-08 — `test_u_in_08_empty_count_short_circuits_before_range`
+- [ ] **구현:** 1 blank → `E002` / empty count가 range보다 선행
+- [ ] **검증:** U-IN-07~08 + 이전 GREEN 회귀
+
+#### G-C-07 · Domain 격리 (U-FLOW-02) — 5건
+
+- [ ] `test_u_flow_02_null_matrix_execute_never_called`
+- [ ] `test_u_flow_02_three_blanks_execute_never_called`
+- [ ] `test_u_flow_02_out_of_range_execute_never_called`
+- [ ] `test_u_flow_02_duplicate_execute_never_called`
+- [ ] `test_u_flow_02_one_blank_execute_never_called`
+- [ ] **구현:** invalid 입력 시 `execute.call_count == 0`
+- [ ] **검증:** U-FLOW-02 5건 + Track A Boundary 전체 회귀
+
+#### G-C-08 · 성공 envelope (U-OUT-01~03) — 3건
+
+> 선행: Track B D-SOL-01 (G1 Step A)
+
+- [ ] U-OUT-01 — `test_u_out_01_success_result_length_six`
+- [ ] U-OUT-02 — `test_u_out_02_success_coordinates_one_indexed`
+- [ ] U-OUT-03 — `test_u_out_03_success_missing_numbers_ascending_in_tuple`
+- [ ] **구현:** 성공 시 `int[6]`, 좌표 1-index, `n1 < n2`
+- [ ] **검증:** U-OUT 3건 + Track A 전체 회귀
+
+### Track B — Domain / Logic GREEN
+
+> 선행: G0~G3 fixture 주석 해제 · Skeleton Full RED 전환
+
+#### G-C-B1 · D-LOC-01 — 1건
+
+- [ ] `test_d_loc_01_find_blank_coords_row_major_on_g1`
+- [ ] **구현:** G1 빈칸 `(2,2)`, `(3,3)` row-major (1-index)
+- [ ] **대상:** `entity/services/empty_cell_locator.py`
+
+#### G-C-B2 · D-MIS-01 — 1건
+
+- [ ] `test_d_mis_01_find_not_exist_nums_ascending_on_g1`
+- [ ] **구현:** G1 누락 수 `{7, 10}` 오름차순
+- [ ] **대상:** `entity/services/missing_number_finder.py`
+
+#### G-C-B3 · D-VAL-01~06 — 6건
+
+- [ ] D-VAL-01 — G0 complete → `True`
+- [ ] D-VAL-02 — row sum mismatch → `False`
+- [ ] D-VAL-03 — column sum mismatch → `False`
+- [ ] D-VAL-04 — diagonal sum mismatch → `False`
+- [ ] D-VAL-05 — duplicate → `False`
+- [ ] D-VAL-06 — contains 0 → `False`
+- [ ] **구현:** `is_magic_square()` 최소 분기
+- [ ] **대상:** `entity/services/magic_square_validator.py`
+
+#### G-C-B4 · D-SOL-01, D-SOL-04 — 2건
+
+- [ ] D-SOL-01 — G1 Step A → `[2,2,7,3,3,10]`
+- [ ] D-SOL-04 — `int[6]` 길이 · 1-index 좌표 정책
+- [ ] **대상:** `control/two_cell_solver.py`
+
+#### G-C-B5 · D-SOL-02 — 1건
+
+- [ ] D-SOL-02 — G2 Step B → `[2,3,10,4,1,4]`
+- [ ] **선행:** G2 fixture 확정
+
+#### G-C-B6 · D-SOL-03 — 1건
+
+- [ ] D-SOL-03 — G3 both fail → `UnsolvableDomainError`
+- [ ] **선행:** G3 placeholder 격자 확정
+
+### 마일스톤 (Track A Full RED 완료 기준)
+
+- [ ] `test_fr01_01_invalid_size.py` → **8 passed** (G-C-01 + G-C-02)
+- [ ] [docs/defect_list.md](docs/defect_list.md) DEF-001~007 **Closed**
+- [ ] Boundary `--cov-fail-under=85` 통과
+
+### GREEN 진행 요약
+
+| GREEN 커밋 | 테스트 수 | 상태 |
+|-----------|----------|------|
+| G-C-01 | 4 | ✅ 진행됨 |
+| G-C-02 | 3 | ⬜ 다음 |
+| G-C-03 | 2 | ⬜ |
+| G-C-04 | 2 | ⬜ |
+| G-C-05 | 1 | ⬜ |
+| G-C-06 | 2 | ⬜ |
+| G-C-07 | 5 | ⬜ |
+| G-C-B1~B6 | 12 | ⬜ |
+| G-C-08 | 3 | ⬜ |
+
+**다음 작업:** **G-C-02** — `test_empty_list_*`, `test_four_empty_rows_*`, `test_3x4_*` (3건)
 
 ---
 
@@ -255,6 +415,8 @@ Concept → Business Rule → Scenario → Acceptance Criteria
 | 문서 | 역할 |
 |------|------|
 | [docs/PRD_MagicSquare.md](docs/PRD_MagicSquare.md) | 프로젝트 목적, FR/BR, 입·출력 계약, 오류 정책, Dual-Track TDD 전략의 **1차 기준(PRD)** |
+| [docs/test_plan.md](docs/test_plan.md) | Track A/B 테스트 계획, AC·시나리오·커버리지·pytest 전략 |
+| [docs/defect_list.md](docs/defect_list.md) | RED 단계 결함 목록 (DEF-xxx, Closure 기준) |
 | [Report/01_Problem_Definition_Report.md](Report/01_Problem_Definition_Report.md) | STEP 1~5 문제 정의, Why Chain, Invariant, “검증·설명” 문제로의 재정의 |
 | [Report/02_DualTrack_CleanArchitecture_TDD_Design.md](Report/02_DualTrack_CleanArchitecture_TDD_Design.md) | 입·출력 계약, Domain Invariant, Layer Boundary, Dual-Track TDD 설계 |
 | [Report/03_CursorRules_Work_Report.md](Report/03_CursorRules_Work_Report.md) | 개발 환경, ECB, TDD, pytest, 품질·금지 패턴, `.cursorrules` 작성 이력 |
@@ -295,7 +457,9 @@ Concept → Business Rule → Scenario → Acceptance Criteria
 MagicSquare_21/
 ├── README.md                 ← 본 문서 (TDD 시작 가이드)
 ├── docs/
-│   └── PRD_MagicSquare.md    ← PRD 1차 기준
+│   ├── PRD_MagicSquare.md    ← PRD 1차 기준
+│   ├── test_plan.md          ← 테스트 계획
+│   └── defect_list.md        ← 결함 목록
 ├── Report/                   ← 문제 정의 · 설계 · 검증 보고서
 ├── Prompt/                   ← Cursor 프롬프트 이력
 ├── .cursorrules              ← 프로젝트 규칙

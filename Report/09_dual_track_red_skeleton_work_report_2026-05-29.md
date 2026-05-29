@@ -28,7 +28,7 @@
 **사용자 요청 요약:**
 
 - TDD phase: **RED (Skeleton)** — 구조·`pytest.fail`만
-- SSOT: `test_plan.md`, `docs/PRD_MagicSquare.md`, Report/, `.cursorrules`
+- SSOT: `docs/test_plan.md`, `docs/PRD_MagicSquare.md`, Report/, `.cursorrules`
 - 금지: `src/` 구현, GREEN/REFACTOR, assert 기대값, Report/08 기존 Full RED 수정
 - 범위: U-IN-04~08, U-OUT-01~03, U-FLOW-02(확장), D-LOC-01, D-MIS-01, D-VAL-01~06, D-SOL-01~04
 - 중복 금지: U-IN-01~03 (Report/08 `test_ac_fr_01_01_*` 대응)
@@ -180,7 +180,7 @@ python -m pytest tests/boundary/ tests/entity/ -v --continue-on-collection-error
 - [Report/08_dual_track_red_design_report_2026-05-29.md](./08_dual_track_red_design_report_2026-05-29.md)
 - [Report/07_red_phase_tdd_work_report_2026-05-29.md](./07_red_phase_tdd_work_report_2026-05-29.md)
 - [docs/PRD_MagicSquare.md](../docs/PRD_MagicSquare.md)
-- [test_plan.md](../test_plan.md)
+- [test_plan.md](../docs/test_plan.md)
 - [.cursorrules](../.cursorrules)
 - [Prompt/09_export_transcript_dual_track_red_skeleton_2026-05-29.md](../Prompt/09_export_transcript_dual_track_red_skeleton_2026-05-29.md)
 

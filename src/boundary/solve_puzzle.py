@@ -2,8 +2,11 @@
 
 from __future__ import annotations
 
+from src.boundary.input_validator import InputValidator
 from src.boundary.ports import CompletionResolverPort
 from src.boundary.schemas import FailureResult
+
+_validator = InputValidator()
 
 
 def solve_puzzle(
@@ -15,6 +18,9 @@ def solve_puzzle(
 
     RED: not implemented — tests must fail until GREEN.
     """
+    failure = _validator.validate(grid)
+    if failure is not None:
+        return failure
     raise NotImplementedError(
         "RED: implement Boundary validation and INVALID_SIZE failure response"
     )
