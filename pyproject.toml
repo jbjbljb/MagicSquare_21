@@ -26,3 +26,6 @@ include = ["src*"]
 testpaths = ["tests"]
 pythonpath = ["."]
 addopts = "-ra"
+markers = [
+    "golden_master: Golden Master / Approval regression tests (GM-2)",
+]

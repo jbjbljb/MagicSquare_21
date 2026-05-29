@@ -1,5 +1,5 @@
 """
-Track B — D-SOL-01~04 TwoCellSolver / solution RED skeletons.
+Track B — D-SOL-01~04 TwoCellSolver / solution Full RED.
 
 Control-layer solver; tests live under tests/entity per Dual-Track layout.
 Domain Mock prohibited.
@@ -9,57 +9,64 @@ from __future__ import annotations
 
 import pytest
 
-from control.two_cell_solver import solution
-
-# G1 — Step A success → [2,2,7,3,3,10]
-# _G1: list[list[int]] = [
-#     [16, 2, 3, 13],
-#     [5, 11, 0, 8],
-#     [9, 6, 0, 12],
-#     [4, 14, 15, 1],
-# ]
-
-# G2 — Step B success → [2,3,10,4,1,4]
-# _G2: list[list[int]] = [
-#     [16, 2, 3, 13],
-#     [5, 11, 0, 8],
-#     [9, 7, 6, 12],
-#     [0, 14, 15, 1],
-# ]
+from src.entity.constants import CELL_VALUE_MAX, CELL_VALUE_MIN, GRID_SIZE
+from src.control.exceptions import UnsolvableDomainError
+from src.control.two_cell_solver import solution
+from tests.conftest import G1, G2, G3
 
 
 class TestDSol01To04:
-    """D-SOL-01~04 — solution() contract RED skeletons."""
+    """D-SOL-01~04 — solution() contract."""
 
     def test_d_sol_01_step_a_success_on_g1(self) -> None:
-        """D-SOL-01 — G1 small-first → [2,2,7,3,3,10]."""
+        """D-SOL-01 — G1 small-first → [1,2,2,3,4,12]."""
+        # D-SOL-01
         # Given
-        # grid = _G1
+        grid = [row[:] for row in G1]
+
         # When
-        # result = solution(grid)
-        pytest.fail("RED: D-SOL-01 — G1 Step A → [2,2,7,3,3,10]")
+        result = solution(grid)
+
+        # Then
+        assert result == [1, 2, 2, 3, 4, 12]
 
     def test_d_sol_02_step_b_success_on_g2(self) -> None:
         """D-SOL-02 — G2 reverse success → [2,3,10,4,1,4]."""
+        # D-SOL-02
         # Given
-        # grid = _G2  # TBD: confirm G2 fixture before GREEN
+        grid = [row[:] for row in G2]
+
         # When
-        # result = solution(grid)
-        pytest.fail("RED: D-SOL-02 — G2 TBD")
+        result = solution(grid)
+
+        # Then
+        assert result == [2, 3, 10, 4, 1, 4]
 
     def test_d_sol_03_both_steps_fail_on_g3(self) -> None:
         """D-SOL-03 — G3 placeholder → UnsolvableDomainError."""
+        # D-SOL-03
         # Given
-        # grid = G3 from conftest (placeholder)
-        # When
-        # with pytest.raises(UnsolvableDomainError):
-        #     solution(grid)
-        pytest.fail("RED: D-SOL-03 — G3 both attempts fail → UnsolvableDomainError")
+        grid = [row[:] for row in G3]
+
+        # When / Then
+        with pytest.raises(UnsolvableDomainError):
+            solution(grid)
 
     def test_d_sol_04_result_shape_and_one_index_policy_on_g1(self) -> None:
         """D-SOL-04 — len 6; r,c ∈ [1,4]; n ∈ [1,16]."""
+        # D-SOL-04
         # Given
-        # grid = _G1
+        grid = [row[:] for row in G1]
+
         # When
-        # result = solution(grid)
-        pytest.fail("RED: D-SOL-04 — int[6] length and 1-index coordinate policy")
+        result = solution(grid)
+
+        # Then
+        assert len(result) == 6
+        row1, col1, num1, row2, col2, num2 = result
+        assert CELL_VALUE_MIN <= row1 <= GRID_SIZE
+        assert CELL_VALUE_MIN <= col1 <= GRID_SIZE
+        assert CELL_VALUE_MIN <= row2 <= GRID_SIZE
+        assert CELL_VALUE_MIN <= col2 <= GRID_SIZE
+        assert CELL_VALUE_MIN <= num1 <= CELL_VALUE_MAX
+        assert CELL_VALUE_MIN <= num2 <= CELL_VALUE_MAX

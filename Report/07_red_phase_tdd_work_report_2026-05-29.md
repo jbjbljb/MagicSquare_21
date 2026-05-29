@@ -151,8 +151,8 @@ pytest tests/boundary/test_fr01_01_invalid_size.py -v
 ## 8. 참조 문서
 
 - [docs/PRD_MagicSquare.md](../docs/PRD_MagicSquare.md)
-- [test_plan.md](../test_plan.md)
-- [defect_list.md](../defect_list.md)
+- [test_plan.md](../docs/test_plan.md)
+- [defect_list.md](../docs/defect_list.md)
 - [README.md](../README.md)
 - [Prompt/07_export_transcript_red_phase_tdd_2026-05-29.md](../Prompt/07_export_transcript_red_phase_tdd_2026-05-29.md)
 

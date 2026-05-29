@@ -1,10 +1,9 @@
 """
-Entity-layer fixtures — G0~G3 placeholders (RED Skeleton).
-
-See tests/conftest.py for grid definitions; duplicate imports avoided until GREEN.
+Entity-layer fixtures — re-export shared G0~G3 grids from tests.conftest.
 """
 
 from __future__ import annotations
 
-# Re-export entity grid fixtures here when implemented:
-# from tests.conftest import grid_g0, grid_g1, grid_g2, grid_g3
+from tests.conftest import grid_g0, grid_g1, grid_g2, grid_g3
+
+__all__ = ["grid_g0", "grid_g1", "grid_g2", "grid_g3"]

@@ -1,0 +1,9 @@
+"""Entity domain constants (4×4 magic square)."""
+
+GRID_SIZE = 4
+
+BLANK_CELL_VALUE = 0
+CELL_VALUE_MIN = 1
+CELL_VALUE_MAX = GRID_SIZE * GRID_SIZE
+
+MAGIC_SUM = GRID_SIZE * (GRID_SIZE * GRID_SIZE + 1) // 2

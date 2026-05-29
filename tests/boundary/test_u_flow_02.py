@@ -1,77 +1,144 @@
 """
-Track A — U-FLOW-02 (extended) Domain isolation RED skeletons.
+Track A — U-FLOW-02 (extended) Domain isolation Full RED.
 
-Invalid inputs must keep SolvePartialMagicSquare.execute call_count == 0.
-Mock/spy on Control port — comments only in RED Skeleton phase.
+Invalid inputs must keep CompletionResolverPort.resolve call_count == 0.
 """
 
 from __future__ import annotations
 
+from unittest.mock import create_autospec
+
 import pytest
 
-from boundary.ui_boundary import UIBoundary
+from src.boundary.ports import CompletionResolverPort
+from src.boundary.schemas import FailureResult
+from src.boundary.ui_boundary import UIBoundary
 
-# from control.ports import SolvePartialMagicSquare
+_MATRIX_THREE_BLANKS: list[list[int]] = [
+    [16, 2, 3, 13],
+    [5, 11, 0, 8],
+    [9, 7, 0, 12],
+    [0, 14, 15, 1],
+]
+
+_MATRIX_CELL_17: list[list[int]] = [
+    [16, 2, 3, 13],
+    [5, 11, 0, 8],
+    [9, 7, 0, 12],
+    [4, 14, 15, 17],
+]
+
+_MATRIX_DUPLICATE: list[list[int]] = [
+    [16, 2, 3, 13],
+    [5, 11, 0, 8],
+    [9, 7, 0, 12],
+    [4, 14, 7, 7],
+]
+
+_MATRIX_ONE_BLANK: list[list[int]] = [
+    [16, 2, 3, 13],
+    [5, 11, 10, 8],
+    [9, 7, 6, 12],
+    [0, 14, 15, 1],
+]
 
 
 @pytest.fixture
-def ui_boundary_with_spy() -> UIBoundary:
-    """UIBoundary with execute spy — wire in GREEN."""
-    # execute_spy = create_autospec(SolvePartialMagicSquare, instance=True)
-    # return UIBoundary(solver_port=execute_spy)
-    return UIBoundary()
+def mock_resolver() -> CompletionResolverPort:
+    """Spy-ready Domain resolver mock (resolve must stay uncalled on failure)."""
+    return create_autospec(CompletionResolverPort, instance=True)
+
+
+@pytest.fixture
+def ui_boundary_with_spy(mock_resolver: CompletionResolverPort) -> UIBoundary:
+    """UIBoundary with resolve spy."""
+    return UIBoundary(solver_port=mock_resolver)
 
 
 class TestUFlow02Extended:
-    """U-FLOW-02 — invalid input never calls Domain execute."""
+    """U-FLOW-02 — invalid input never calls Domain resolve."""
 
     def test_u_flow_02_null_matrix_execute_never_called(
-        self, ui_boundary_with_spy: UIBoundary
+        self,
+        ui_boundary_with_spy: UIBoundary,
+        mock_resolver: CompletionResolverPort,
     ) -> None:
-        """U-FLOW-02 — matrix=null → execute.call_count == 0."""
+        """U-FLOW-02 — matrix=null → resolve.call_count == 0."""
+        # U-FLOW-02
         # Given
-        # matrix = None
+        matrix = None
+
         # When
-        # result = ui_boundary_with_spy.solve(matrix)
-        # Then — GREEN: execute_spy.execute.call_count == 0
-        pytest.fail("RED: U-FLOW-02 — null input → execute 0 calls")
+        result = ui_boundary_with_spy.solve(matrix)
+
+        # Then
+        assert isinstance(result, FailureResult)
+        mock_resolver.resolve.assert_not_called()  # type: ignore[attr-defined]
 
     def test_u_flow_02_three_blanks_execute_never_called(
-        self, ui_boundary_with_spy: UIBoundary
+        self,
+        ui_boundary_with_spy: UIBoundary,
+        mock_resolver: CompletionResolverPort,
     ) -> None:
-        """U-FLOW-02 ext — E002 path (3 blanks) → execute 0 calls."""
+        """U-FLOW-02 ext — E002 path (3 blanks) → resolve 0 calls."""
+        # U-FLOW-02
         # Given
-        # matrix = [[16,2,3,13],[5,11,0,8],[9,7,0,12],[0,14,15,1]]
+        matrix = _MATRIX_THREE_BLANKS
+
         # When
-        # result = ui_boundary_with_spy.solve(matrix)
-        pytest.fail("RED: U-FLOW-02 — three blanks → execute 0 calls")
+        result = ui_boundary_with_spy.solve(matrix)
+
+        # Then
+        assert isinstance(result, FailureResult)
+        mock_resolver.resolve.assert_not_called()  # type: ignore[attr-defined]
 
     def test_u_flow_02_out_of_range_execute_never_called(
-        self, ui_boundary_with_spy: UIBoundary
+        self,
+        ui_boundary_with_spy: UIBoundary,
+        mock_resolver: CompletionResolverPort,
     ) -> None:
-        """U-FLOW-02 ext — E004 path → execute 0 calls."""
+        """U-FLOW-02 ext — E004 path → resolve 0 calls."""
+        # U-FLOW-02
         # Given
-        # matrix with cell 17 and exactly 2 blanks
+        matrix = _MATRIX_CELL_17
+
         # When
-        # result = ui_boundary_with_spy.solve(matrix)
-        pytest.fail("RED: U-FLOW-02 — range violation → execute 0 calls")
+        result = ui_boundary_with_spy.solve(matrix)
+
+        # Then
+        assert isinstance(result, FailureResult)
+        mock_resolver.resolve.assert_not_called()  # type: ignore[attr-defined]
 
     def test_u_flow_02_duplicate_execute_never_called(
-        self, ui_boundary_with_spy: UIBoundary
+        self,
+        ui_boundary_with_spy: UIBoundary,
+        mock_resolver: CompletionResolverPort,
     ) -> None:
-        """U-FLOW-02 ext — E005 path → execute 0 calls."""
+        """U-FLOW-02 ext — E005 path → resolve 0 calls."""
+        # U-FLOW-02
         # Given
-        # matrix with non-zero duplicate and exactly 2 blanks
+        matrix = _MATRIX_DUPLICATE
+
         # When
-        # result = ui_boundary_with_spy.solve(matrix)
-        pytest.fail("RED: U-FLOW-02 — duplicate non-zero → execute 0 calls")
+        result = ui_boundary_with_spy.solve(matrix)
+
+        # Then
+        assert isinstance(result, FailureResult)
+        mock_resolver.resolve.assert_not_called()  # type: ignore[attr-defined]
 
     def test_u_flow_02_one_blank_execute_never_called(
-        self, ui_boundary_with_spy: UIBoundary
+        self,
+        ui_boundary_with_spy: UIBoundary,
+        mock_resolver: CompletionResolverPort,
     ) -> None:
-        """U-FLOW-02 ext — U-IN-07 RD-04 → execute 0 calls."""
+        """U-FLOW-02 ext — U-IN-07 RD-04 → resolve 0 calls."""
+        # U-FLOW-02
         # Given
-        # matrix = PRD RD-04 (one blank)
+        matrix = _MATRIX_ONE_BLANK
+
         # When
-        # result = ui_boundary_with_spy.solve(matrix)
-        pytest.fail("RED: U-FLOW-02 — one blank → execute 0 calls")
+        result = ui_boundary_with_spy.solve(matrix)
+
+        # Then
+        assert isinstance(result, FailureResult)
+        mock_resolver.resolve.assert_not_called()  # type: ignore[attr-defined]
