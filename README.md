@@ -260,16 +260,16 @@ Concept → Business Rule → Scenario → Acceptance Criteria
 - [x] `test_none_grid_message_matches_prd_section_8_1_byte_for_byte`
 - [x] `test_none_grid_resolve_called_zero_times_isolation`
 - [x] **구현:** `grid is None` → `FailureResult(INVALID_SIZE)` + `resolve()` 0회
-- [ ] **검증:** 위 4건 `pytest -v` 통과 확인
+- [x] **검증:** 위 4건 `pytest -v` 통과 확인
 
 #### G-C-02 · shape 위반 (G-005~007) — 3건
 
-- [ ] `test_empty_list_grid_returns_invalid_size_failure` (`grid=[]`)
-- [ ] `test_four_empty_rows_grid_returns_invalid_size_failure` (`grid=[[]]*4`)
-- [ ] `test_3x4_grid_returns_invalid_size_failure` (3×4)
-- [ ] **구현:** `len(grid) != 4` 또는 `len(row) != 4` → `INVALID_SIZE`
-- [ ] **금지:** empty count / range / duplicate 분기 선행 구현
-- [ ] **검증:** 위 3건 + G-C-01 회귀 4건 통과
+- [x] `test_empty_list_grid_returns_invalid_size_failure` (`grid=[]`)
+- [x] `test_four_empty_rows_grid_returns_invalid_size_failure` (`grid=[[]]*4`)
+- [x] `test_3x4_grid_returns_invalid_size_failure` (3×4)
+- [x] **구현:** `len(grid) != 4` 또는 `len(row) != 4` → `INVALID_SIZE`
+- [x] **금지:** empty count / range / duplicate 분기 선행 구현
+- [x] **검증:** 위 3건 + G-C-01 회귀 4건 통과
 
 #### G-C-03 · empty count (U-IN-03~04) — 2건
 
