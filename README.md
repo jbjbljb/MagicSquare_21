@@ -413,6 +413,73 @@ GREEN 완료 후 즉시 적용.
 
 ---
 
+## REFACTOR 단계 To-Do 리스트
+
+> 기준: [Report/13_refactor_readiness_code_review_smell_report_2026-05-29.md](Report/13_refactor_readiness_code_review_smell_report_2026-05-29.md)  
+> 범위: `src/boundary/*`, `src/control/*`  
+> 원칙: **전후 전체 pytest + `@pytest.mark.golden_master` GREEN 유지** (계약 변경·magic number 도입 금지)  
+> 각 항목은 REFACTOR 완료 시 체크합니다. 카테고리 내 순서는 **우선순위 오름차순(Low → Medium → High)** 입니다.
+
+### 착수 전 확인
+
+- [x] **RF-00:** 전체 `pytest` + `pytest -m golden_master` GREEN 확인
+
+### 1. 아키텍처 · 계약 (ECB / SSOT / 예외) ✅
+
+레이어 경계, 단일 출처, 오류 매핑
+
+> **완료:** `refactor/refactor` · commit `933fea0` · `pytest` **41 passed** · `golden_master` **5 passed**
+
+- [x] **RF-1-01:** `contracts.py` ↔ `entity/constants.py` 상수 SSOT 통합 (M-3) — `entity/constants` SSOT · `control/constants` re-export · `boundary/contracts`는 Boundary 오류 코드만 유지
+- [x] **RF-1-02:** GM-TC-03/04 그리드 `SCENARIOS`·테스트 파일 이중 정의 단일 출처화 (M-1) — `tests/golden_master.py` `SCENARIO_BY_ID` 참조
+- [x] **RF-1-03:** U-OUT-03 `n1<n2` vs D-SOL-02 reverse 정책 정합성 검토 (M-4) — `{n1,n2}` = 누락 수 검증 · G2 reverse E2E 추가
+- [x] **RF-1-04:** `input_validator.py` 53–80 — Entity 2-blank 전제, Boundary 우회 `IndexError` 방어 (M-2) — `empty_cell_locator` blank count `ValueError` 가드
+- [x] **RF-1-05:** `ports.py` — `CompletionResolverPort` Control 어댑터 구현 (H-1) — `control/completion_resolver.py` `TwoCellCompletionResolver`
+- [x] **RF-1-06:** `solve_puzzle.py` 21–28 — ECB 혼재 해소 (어댑터·예외 매핑) — Boundary→Control 위임 · `UnsolvableDomainError` → `FailureResult`
+- [x] **RF-1-07:** `solve_puzzle.py` 24–27 — valid-path `NotImplementedError` 제거 — 기본 `TwoCellCompletionResolver` 주입
+- [x] **RF-1-08:** `two_cell_solver.py` 26 — `UnsolvableDomainError` → Boundary `FailureResult` 매핑 — `solve_puzzle`에서 `E_NO_SOLUTION` 반환 · GM-TC-05 baseline 갱신
+- [x] **RF-1-09:** `ui_boundary.py` — 실제 adapter E2E (G1/G3) + GM → `UIBoundary` 경로 정렬 (M-7) — 기본 resolver · `capture_scenario_output` → `solve_puzzle` 경유
+
+### 2. 코드 구조 · 가독성 (DRY / 분해 / 상수·네이밍)
+
+중복 제거, 함수 분해, 리터럴·이름 정리
+
+- [ ] **RF-2-01:** `ui_boundary.py` 13 — `solver_port` 파라미터 명명 정리
+- [ ] **RF-2-02:** `boundary/__init__.py` — `__all__` export 범위 정리
+- [ ] **RF-2-03:** `ports.py` 10 — docstring `"4x4"` 리터럴 상수화
+- [ ] **RF-2-04:** `input_validator.py` 29–35 — GREEN 단계 docstring 정리
+- [ ] **RF-2-05:** `input_validator.py` 53–80 — grid 3회 순회 헬퍼/VO 분리
+- [ ] **RF-2-06:** `two_cell_solver.py` 19–22 — Attempt 1·2 대칭 구조 공통화
+- [ ] **RF-2-07:** `two_cell_solver.py` 15 — `int[6]` 출력 길이 상수 도입
+- [ ] **RF-2-08:** `input_validator.py` 26–81 — `validate()` shape/blank/range/duplicate 분해
+- [ ] **RF-2-09:** `input_validator.py` 37–52 — `INVALID_SIZE` `FailureResult` 3회 중복 제거
+- [ ] **RF-2-10:** `contracts.py` 6, 18 — `"4x4"`, `"1~16"` 메시지 리터럴 상수화
+
+### 3. 테스트 · 회귀 안전망
+
+커버리지, 전용 테스트, GM 인프라
+
+- [ ] **RF-3-01:** `tests/` — diff label, `assert_contract_int6`, `pytestmark` 중복 정리
+- [ ] **RF-3-02:** GM approve — baseline 전체 재쓰기 · xdist 경쟁 완화 (M-5)
+- [ ] **RF-3-03:** `contracts.py`, `schemas.py`, `ports.py` — 전용 단위 테스트 추가
+- [ ] **RF-3-04:** `exceptions.py` — Boundary 예외 매핑 테스트 추가
+- [ ] **RF-3-05:** GM / `capture_scenario_output` — `UIBoundary` 경로 검증 (M-7)
+- [ ] **RF-3-06:** [docs/defect_list.md](docs/defect_list.md) DEF Closed 처리
+- [ ] **RF-3-07:** Boundary coverage **85%** gate 통과
+
+### 스멜 없음 (변경 불필요)
+
+- `schemas.py`, `exceptions.py`, `control/__init__.py`
+
+### 권장 실행 순서 (카테고리 횡단)
+
+1. **RF-00** — pytest + golden_master GREEN 확인
+2. **1** — SSOT → Control 어댑터 → 예외 매핑
+3. **2** — `validate()` 분해 · `INVALID_SIZE` 중복 제거
+4. **3** — `UIBoundary` E2E · coverage gate (선택)
+
+---
+
 ## 8. Quality Gates
 
 | 항목 | 기준 |
@@ -500,4 +567,4 @@ MagicSquare_21/
 
 ---
 
-*최종 업데이트: 2026-05-29 — PRD 기반 TDD 시작 준비 (구현·테스트 코드 미착수)*
+*최종 업데이트: 2026-05-29 — REFACTOR 단계 To-Do 체크리스트 추가 (Report/13 기준)*

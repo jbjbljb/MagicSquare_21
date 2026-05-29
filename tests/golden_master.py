@@ -8,9 +8,8 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from src.boundary.contracts import GRID_SIZE
-from src.boundary.input_validator import InputValidator
-from src.control.exceptions import UnsolvableDomainError
-from src.control.two_cell_solver import solution
+from src.boundary.schemas import FailureResult
+from src.boundary.solve_puzzle import solve_puzzle
 from src.entity.constants import CELL_VALUE_MAX, CELL_VALUE_MIN
 from src.entity.services.empty_cell_locator import find_blank_coords
 from src.entity.services.missing_number_finder import find_not_exist_nums
@@ -19,9 +18,6 @@ from tests.conftest import G1, G2, G3
 EXPECTED_PATH = Path(__file__).resolve().parent / "golden_master_expected.txt"
 SECTION_SEPARATOR = "\n\n" + ("_" * 40) + "\n\n"
 SECTION_HEADER_PATTERN = re.compile(r"^\[(GM-TC-\d{2})\]$", re.MULTILINE)
-
-# GM-TC-05 domain failure — serialized until Boundary E_NO_SOLUTION GREEN
-NO_VALID_MAGIC_SQUARE_CODE = "UnsolvableDomainError"
 
 
 @dataclass(frozen=True)
@@ -67,8 +63,6 @@ SCENARIO_BY_ID: dict[str, GoldenScenario] = {
     scenario.test_id: scenario for scenario in SCENARIOS
 }
 
-_validator = InputValidator()
-
 
 def format_grid(grid: list[list[int]]) -> str:
     """Render grid rows as space-separated integers."""
@@ -90,18 +84,14 @@ def format_error(code: str) -> str:
 
 def capture_scenario_output(grid: list[list[int]]) -> str:
     """
-    Capture solver API result for one grid.
+    Capture Boundary solve result for one grid via ``solve_puzzle``.
 
-    Boundary validation failures return Error code; valid grids delegate to
-    ``solution`` which may return int[6] or raise ``UnsolvableDomainError``.
+    Validation failures return Error code; unsolvable grids return ``E_NO_SOLUTION``.
     """
-    failure = _validator.validate(grid)
-    if failure is not None:
-        return format_error(failure.code)
-    try:
-        return format_output(solution(grid))
-    except UnsolvableDomainError:
-        return format_error(NO_VALID_MAGIC_SQUARE_CODE)
+    result = solve_puzzle(grid)
+    if isinstance(result, FailureResult):
+        return format_error(result.code)
+    return format_output(result)
 
 
 def serialize_section(scenario: GoldenScenario) -> str:
