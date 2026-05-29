@@ -282,10 +282,10 @@ Concept → Business Rule → Scenario → Acceptance Criteria
 
 #### G-C-04 · cell range (U-IN-05, 05b) — 2건
 
-- [ ] U-IN-05 — `test_u_in_05_cell_value_17_returns_e004` (값 17)
-- [ ] U-IN-05b — `test_u_in_05b_negative_cell_returns_e004` (값 -1)
-- [ ] **구현:** `0` 외 `1~16` 밖 값 → `E004`
-- [ ] **검증:** U-IN-05~05b + 이전 GREEN 회귀
+- [x] U-IN-05 — `test_u_in_05_cell_value_17_returns_e004` (값 17)
+- [x] U-IN-05b — `test_u_in_05b_negative_cell_returns_e004` (값 -1)
+- [x] **구현:** `0` 외 `1~16` 밖 값 → `E004`
+- [x] **검증:** U-IN-05~05b + 이전 GREEN 회귀
 
 #### G-C-05 · duplicate (U-IN-06) — 1건
 
