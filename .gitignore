@@ -1,2 +1,11 @@
 # Local credentials (never commit)
 .env
+
+# Python / test artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+.venv/
