@@ -314,11 +314,11 @@ Concept → Business Rule → Scenario → Acceptance Criteria
 
 > 선행: Track B D-SOL-01 (G1 Step A)
 
-- [ ] U-OUT-01 — `test_u_out_01_success_result_length_six`
-- [ ] U-OUT-02 — `test_u_out_02_success_coordinates_one_indexed`
-- [ ] U-OUT-03 — `test_u_out_03_success_missing_numbers_ascending_in_tuple`
-- [ ] **구현:** 성공 시 `int[6]`, 좌표 1-index, `n1 < n2`
-- [ ] **검증:** U-OUT 3건 + Track A 전체 회귀
+- [x] U-OUT-01 — `test_u_out_01_success_result_length_six`
+- [x] U-OUT-02 — `test_u_out_02_success_coordinates_one_indexed`
+- [x] U-OUT-03 — `test_u_out_03_success_missing_numbers_ascending_in_tuple`
+- [x] **구현:** 성공 시 `int[6]`, 좌표 1-index, `n1 < n2`
+- [x] **검증:** U-OUT 3건 + Track A 전체 회귀
 
 ### Track B — Domain / Logic GREEN
 
