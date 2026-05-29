@@ -302,13 +302,13 @@ Concept → Business Rule → Scenario → Acceptance Criteria
 
 #### G-C-07 · Domain 격리 (U-FLOW-02) — 5건
 
-- [ ] `test_u_flow_02_null_matrix_execute_never_called`
-- [ ] `test_u_flow_02_three_blanks_execute_never_called`
-- [ ] `test_u_flow_02_out_of_range_execute_never_called`
-- [ ] `test_u_flow_02_duplicate_execute_never_called`
-- [ ] `test_u_flow_02_one_blank_execute_never_called`
-- [ ] **구현:** invalid 입력 시 `execute.call_count == 0`
-- [ ] **검증:** U-FLOW-02 5건 + Track A Boundary 전체 회귀
+- [x] `test_u_flow_02_null_matrix_execute_never_called`
+- [x] `test_u_flow_02_three_blanks_execute_never_called`
+- [x] `test_u_flow_02_out_of_range_execute_never_called`
+- [x] `test_u_flow_02_duplicate_execute_never_called`
+- [x] `test_u_flow_02_one_blank_execute_never_called`
+- [x] **구현:** invalid 입력 시 `execute.call_count == 0`
+- [x] **검증:** U-FLOW-02 5건 + Track A Boundary 전체 회귀
 
 #### G-C-08 · 성공 envelope (U-OUT-01~03) — 3건
 
