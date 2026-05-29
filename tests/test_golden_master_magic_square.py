@@ -9,19 +9,22 @@ from src.boundary.contracts import (
     EMPTY_COUNT_CODE,
     NO_SOLUTION_CODE,
 )
-from src.boundary.schemas import FailureResult
-from src.boundary.solve_puzzle import solve_puzzle
 from src.control.two_cell_solver import solution
-from tests.conftest import G1, G2, G3
-from tests.golden_master import (
-    SCENARIO_BY_ID,
+from tests.conftest import G1, G2
+from tests.contract_assertions import (
     assert_contract_error_code,
     assert_contract_int6,
     assert_contract_reverse_fallback,
     assert_contract_row_major,
     assert_contract_small_first,
+)
+from tests.golden_master import (
+    SCENARIO_BY_ID,
+    SCENARIOS,
+    GoldenScenario,
     assert_scenario_golden,
     capture_scenario_output,
+    capture_ui_boundary_output,
     format_error,
 )
 
@@ -31,7 +34,6 @@ pytestmark = pytest.mark.golden_master
 class TestGoldenMasterMagicSquare:
     """GM-2 — Magic Square Solver Golden Master regression suite."""
 
-    @pytest.mark.golden_master
     def test_gm_tc_01_normal_success(
         self, golden_approve: bool
     ) -> None:
@@ -45,7 +47,6 @@ class TestGoldenMasterMagicSquare:
 
         assert_scenario_golden("GM-TC-01", approve=golden_approve)
 
-    @pytest.mark.golden_master
     def test_gm_tc_02_reverse_success(
         self, golden_approve: bool
     ) -> None:
@@ -59,7 +60,6 @@ class TestGoldenMasterMagicSquare:
 
         assert_scenario_golden("GM-TC-02", approve=golden_approve)
 
-    @pytest.mark.golden_master
     def test_gm_tc_03_invalid_blank_count(
         self, golden_approve: bool
     ) -> None:
@@ -73,7 +73,6 @@ class TestGoldenMasterMagicSquare:
 
         assert_scenario_golden("GM-TC-03", approve=golden_approve)
 
-    @pytest.mark.golden_master
     def test_gm_tc_04_duplicate_number(
         self, golden_approve: bool
     ) -> None:
@@ -87,7 +86,6 @@ class TestGoldenMasterMagicSquare:
 
         assert_scenario_golden("GM-TC-04", approve=golden_approve)
 
-    @pytest.mark.golden_master
     def test_gm_tc_05_no_valid_magic_square(
         self, golden_approve: bool
     ) -> None:
@@ -95,11 +93,24 @@ class TestGoldenMasterMagicSquare:
         scenario = SCENARIO_BY_ID["GM-TC-05"]
         grid = [row[:] for row in scenario.grid]
 
-        result = solve_puzzle(grid)
-        assert isinstance(result, FailureResult)
-        assert result.code == NO_SOLUTION_CODE
+        ui_output = capture_ui_boundary_output(grid)
+        assert ui_output == format_error(NO_SOLUTION_CODE)
 
         output = capture_scenario_output(grid)
         assert output == format_error(NO_SOLUTION_CODE)
+        assert output == ui_output
 
         assert_scenario_golden("GM-TC-05", approve=golden_approve)
+
+
+class TestGoldenMasterUIBoundaryPath:
+    """RF-3-05 — ``UIBoundary`` and ``solve_puzzle`` produce identical GM output."""
+
+    @pytest.mark.parametrize("scenario", SCENARIOS, ids=lambda s: s.test_id)
+    def test_ui_boundary_matches_solve_puzzle_for_scenario(
+        self, scenario: GoldenScenario
+    ) -> None:
+        """Each GM scenario serializes the same via UIBoundary and solve_puzzle."""
+        grid = [row[:] for row in scenario.grid]
+
+        assert capture_ui_boundary_output(grid) == capture_scenario_output(grid)

@@ -457,17 +457,19 @@ GREEN 완료 후 즉시 적용.
 - [x] **RF-2-09:** `input_validator.py` 37–52 — `INVALID_SIZE` `FailureResult` 3회 중복 제거 — `_invalid_size()` 헬퍼
 - [x] **RF-2-10:** `contracts.py` 6, 18 — `"4x4"`, `"1~16"` 메시지 리터럴 상수화 — `GRID_SIZE_LABEL`, `CELL_VALUE_RANGE_LABEL` f-string 메시지
 
-### 3. 테스트 · 회귀 안전망
+### 3. 테스트 · 회귀 안전망 ✅
 
 커버리지, 전용 테스트, GM 인프라
 
-- [ ] **RF-3-01:** `tests/` — diff label, `assert_contract_int6`, `pytestmark` 중복 정리
-- [ ] **RF-3-02:** GM approve — baseline 전체 재쓰기 · xdist 경쟁 완화 (M-5)
-- [ ] **RF-3-03:** `contracts.py`, `schemas.py`, `ports.py` — 전용 단위 테스트 추가
-- [ ] **RF-3-04:** `exceptions.py` — Boundary 예외 매핑 테스트 추가
-- [ ] **RF-3-05:** GM / `capture_scenario_output` — `UIBoundary` 경로 검증 (M-7)
-- [ ] **RF-3-06:** [docs/defect_list.md](docs/defect_list.md) DEF Closed 처리
-- [ ] **RF-3-07:** Boundary coverage **85%** gate 통과
+> **완료:** `refactor/refactor` · `pytest` **59 passed** · `golden_master` **10 passed** · Boundary coverage **99%** (gate 85%)
+
+- [x] **RF-3-01:** `tests/` — diff label, `assert_contract_int6`, `pytestmark` 중복 정리 — `tests/contract_assertions.py` 분리 · `unified_diff` scenario label · GM 중복 `@pytest.mark` 제거
+- [x] **RF-3-02:** GM approve — baseline 전체 재쓰기 · xdist 경쟁 완화 (M-5) — `write_section()` per-scenario merge on approve
+- [x] **RF-3-03:** `contracts.py`, `schemas.py`, `ports.py` — 전용 단위 테스트 추가 — `test_boundary_contracts_schemas_ports.py`
+- [x] **RF-3-04:** `exceptions.py` — Boundary 예외 매핑 테스트 추가 — `test_solve_puzzle_exception_mapping.py` (G3 · mock resolver)
+- [x] **RF-3-05:** GM / `capture_scenario_output` — `UIBoundary` 경로 검증 (M-7) — `capture_ui_boundary_output()` · GM-TC-05 · parametrized 5-scenario parity
+- [x] **RF-3-06:** [docs/defect_list.md](docs/defect_list.md) DEF Closed 처리 — DEF-001~007 Closed · closure checklist 완료
+- [x] **RF-3-07:** Boundary coverage **85%** gate 통과 — `pytest --cov=src/boundary --cov-fail-under=85` **99%**
 
 ### 스멜 없음 (변경 불필요)
 
