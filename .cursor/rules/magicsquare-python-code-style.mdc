@@ -1,0 +1,20 @@
+---
+description: MagicSquare Python 코드 스타일 규칙
+globs: "**/*.py"
+alwaysApply: false
+---
+
+# Python Code Style
+
+## Baseline
+- Python 3.10+ 문법을 사용한다.
+- PEP 8을 준수한다.
+- 최대 줄 길이는 88자로 제한한다.
+
+## Typing and Docs
+- 모든 함수 파라미터와 반환값에 타입 힌트를 작성한다.
+- 모든 public 메서드에 Google 스타일 docstring을 작성한다.
+
+## Error Handling
+- `except` 단독 사용을 금지한다.
+- 구체 예외 타입을 명시하고 필요한 경우 로깅 후 재전파한다.

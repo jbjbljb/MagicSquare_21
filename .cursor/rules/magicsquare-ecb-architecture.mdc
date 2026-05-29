@@ -1,0 +1,22 @@
+---
+description: MagicSquare ECB 아키텍처 및 의존성 규칙
+alwaysApply: true
+---
+
+# ECB Architecture Rules
+
+## Layer Responsibilities
+- `boundary`: 외부 입출력(UI, API, CLI) 담당
+- `control`: 비즈니스 로직 담당
+- `entity`: 도메인 데이터와 규칙 담당
+
+## Dependency Direction
+- 허용: `boundary -> control`
+- 허용: `control -> entity`
+- 금지: `boundary -> entity` 직접 의존
+- 금지: `entity -> control` 의존
+- 금지: `entity -> boundary` 의존
+
+## Implementation Guardrails
+- 레이어 경계를 넘는 import/호출을 만들지 않는다.
+- 새 코드 작성 시 먼저 대상 레이어를 판별한다.
