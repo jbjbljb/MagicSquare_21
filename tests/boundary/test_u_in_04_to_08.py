@@ -1,23 +1,33 @@
 """
-Track A — U-IN-04~08 input validation RED skeletons.
+Track A — U-IN-03~08 input validation RED skeletons.
 
 Report/08·09 design: empty count, range, duplicate; U-IN-07/08 extensions.
-Domain execute must not run (U-FLOW-02); assertions deferred to GREEN.
+Domain execute must not run (U-FLOW-02); U-IN-03~04 Full RED, U-IN-05~08 skeleton.
 """
 
 from __future__ import annotations
 
 import pytest
 
-from boundary.input_validator import InputValidator
+from src.boundary.contracts import EMPTY_COUNT_CODE, EMPTY_COUNT_MESSAGE
+from src.boundary.input_validator import InputValidator
+from src.boundary.schemas import FailureResult
+
+# U-IN-03 matrix: G0 complete 4×4 magic square (0 blanks)
+_MATRIX_G0: list[list[int]] = [
+    [16, 2, 3, 13],
+    [5, 11, 10, 8],
+    [9, 7, 6, 12],
+    [4, 14, 15, 1],
+]
 
 # U-IN-04 matrix: 4×4, three blanks (0 count == 3)
-# _MATRIX_THREE_BLANKS: list[list[int]] = [
-#     [16, 2, 3, 13],
-#     [5, 11, 0, 8],
-#     [9, 7, 0, 12],
-#     [0, 14, 15, 1],
-# ]
+_MATRIX_THREE_BLANKS: list[list[int]] = [
+    [16, 2, 3, 13],
+    [5, 11, 0, 8],
+    [9, 7, 0, 12],
+    [0, 14, 15, 1],
+]
 
 # U-IN-05 matrix: cell value 17
 # _MATRIX_CELL_17: list[list[int]] = [
@@ -67,18 +77,39 @@ def input_validator() -> InputValidator:
 
 
 class TestUIn04To08:
-    """U-IN-04~08 — Boundary input contract RED skeletons."""
+    """U-IN-03~08 — Boundary input contract."""
+
+    def test_u_in_03_zero_blanks_g0_returns_e002(
+        self, input_validator: InputValidator
+    ) -> None:
+        """U-IN-03 — G0 complete grid, blank count 0 → Failure E002."""
+        # U-IN-03
+        # Given
+        matrix = _MATRIX_G0
+
+        # When
+        result = input_validator.validate(matrix)
+
+        # Then
+        assert isinstance(result, FailureResult)
+        assert result.code == EMPTY_COUNT_CODE
+        assert result.message == EMPTY_COUNT_MESSAGE
 
     def test_u_in_04_three_blanks_returns_e002(
         self, input_validator: InputValidator
     ) -> None:
         """U-IN-04 — blank count 3 → Failure E002."""
+        # U-IN-04
         # Given
-        # matrix = _MATRIX_THREE_BLANKS
+        matrix = _MATRIX_THREE_BLANKS
+
         # When
-        # result = input_validator.validate(matrix)
-        # Then — GREEN: code E002, message fixed; no exception
-        pytest.fail("RED: U-IN-04 — three blanks (≠2) → E002")
+        result = input_validator.validate(matrix)
+
+        # Then
+        assert isinstance(result, FailureResult)
+        assert result.code == EMPTY_COUNT_CODE
+        assert result.message == EMPTY_COUNT_MESSAGE
 
     def test_u_in_05_cell_value_17_returns_e004(
         self, input_validator: InputValidator

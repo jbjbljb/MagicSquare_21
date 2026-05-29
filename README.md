@@ -275,10 +275,10 @@ Concept → Business Rule → Scenario → Acceptance Criteria
 
 > 선행: Skeleton → Full RED 전환 (`pytest.fail` → assert)
 
-- [ ] U-IN-03 — 빈칸 0개 (G0) → `E002`
-- [ ] U-IN-04 — `test_u_in_04_three_blanks_returns_e002` (빈칸 3개)
-- [ ] **구현:** `count(0) != 2` 검증
-- [ ] **검증:** U-IN-03~04 + G-C-01~02 회귀
+- [x] U-IN-03 — 빈칸 0개 (G0) → `E002`
+- [x] U-IN-04 — `test_u_in_04_three_blanks_returns_e002` (빈칸 3개)
+- [x] **구현:** `count(0) != 2` 검증
+- [x] **검증:** U-IN-03~04 + G-C-01~02 회귀
 
 #### G-C-04 · cell range (U-IN-05, 05b) — 2건
 
