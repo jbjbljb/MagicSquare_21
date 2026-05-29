@@ -247,9 +247,9 @@ Concept → Business Rule → Scenario → Acceptance Criteria
 - [ ] **RED-C-04** — Track B Skeleton
   - [ ] `tests/entity/test_d_loc_01.py`, `test_d_mis_01.py`
   - [ ] `tests/entity/test_d_val_01_to_06.py`, `test_d_sol_01_to_04.py`
-- [ ] **RED-C-05** — Fixture placeholder
-  - [ ] `tests/conftest.py` (G0~G3 주석)
-  - [ ] `tests/entity/conftest.py` (placeholder)
+- [x] **RED-C-05** — Fixture placeholder
+  - [x] `tests/conftest.py` (G0~G3 주석)
+  - [x] `tests/entity/conftest.py` (placeholder)
 
 ### Track A — Boundary GREEN
 
@@ -326,46 +326,46 @@ Concept → Business Rule → Scenario → Acceptance Criteria
 
 #### G-C-B1 · D-LOC-01 — 1건
 
-- [ ] `test_d_loc_01_find_blank_coords_row_major_on_g1`
-- [ ] **구현:** G1 빈칸 `(2,2)`, `(3,3)` row-major (1-index)
-- [ ] **대상:** `entity/services/empty_cell_locator.py`
+- [x] `test_d_loc_01_find_blank_coords_row_major_on_g1`
+- [x] **구현:** G1 빈칸 `(1,2)`, `(3,4)` row-major (1-index)
+- [x] **대상:** `entity/services/empty_cell_locator.py`
 
 #### G-C-B2 · D-MIS-01 — 1건
 
-- [ ] `test_d_mis_01_find_not_exist_nums_ascending_on_g1`
-- [ ] **구현:** G1 누락 수 `{7, 10}` 오름차순
-- [ ] **대상:** `entity/services/missing_number_finder.py`
+- [x] `test_d_mis_01_find_not_exist_nums_ascending_on_g1`
+- [x] **구현:** G1 누락 수 `{2, 12}` 오름차순
+- [x] **대상:** `entity/services/missing_number_finder.py`
 
 #### G-C-B3 · D-VAL-01~06 — 6건
 
-- [ ] D-VAL-01 — G0 complete → `True`
-- [ ] D-VAL-02 — row sum mismatch → `False`
-- [ ] D-VAL-03 — column sum mismatch → `False`
-- [ ] D-VAL-04 — diagonal sum mismatch → `False`
-- [ ] D-VAL-05 — duplicate → `False`
-- [ ] D-VAL-06 — contains 0 → `False`
-- [ ] **구현:** `is_magic_square()` 최소 분기
-- [ ] **대상:** `entity/services/magic_square_validator.py`
+- [x] D-VAL-01 — G0 complete → `True`
+- [x] D-VAL-02 — row sum mismatch → `False`
+- [x] D-VAL-03 — column sum mismatch → `False`
+- [x] D-VAL-04 — diagonal sum mismatch → `False`
+- [x] D-VAL-05 — duplicate → `False`
+- [x] D-VAL-06 — contains 0 → `False`
+- [x] **구현:** `is_magic_square()` 최소 분기
+- [x] **대상:** `entity/services/magic_square_validator.py`
 
 #### G-C-B4 · D-SOL-01, D-SOL-04 — 2건
 
-- [ ] D-SOL-01 — G1 Step A → `[2,2,7,3,3,10]`
-- [ ] D-SOL-04 — `int[6]` 길이 · 1-index 좌표 정책
-- [ ] **대상:** `control/two_cell_solver.py`
+- [x] D-SOL-01 — G1 Step A → `[1,2,2,3,4,12]`
+- [x] D-SOL-04 — `int[6]` 길이 · 1-index 좌표 정책
+- [x] **대상:** `control/two_cell_solver.py`
 
 #### G-C-B5 · D-SOL-02 — 1건
 
-- [ ] D-SOL-02 — G2 Step B → `[2,3,10,4,1,4]`
-- [ ] **선행:** G2 fixture 확정
+- [x] D-SOL-02 — G2 Step B → `[2,3,10,4,1,4]`
+- [x] **선행:** G2 fixture 확정
 
 #### G-C-B6 · D-SOL-03 — 1건
 
-- [ ] D-SOL-03 — G3 both fail → `UnsolvableDomainError`
-- [ ] **선행:** G3 placeholder 격자 확정
+- [x] D-SOL-03 — G3 both fail → `UnsolvableDomainError`
+- [x] **선행:** G3 placeholder 격자 확정
 
 ### 마일스톤 (Track A Full RED 완료 기준)
 
-- [ ] `test_fr01_01_invalid_size.py` → **8 passed** (G-C-01 + G-C-02)
+- [x] `test_fr01_01_invalid_size.py` → **8 passed** (G-C-01 + G-C-02)
 - [ ] [docs/defect_list.md](docs/defect_list.md) DEF-001~007 **Closed**
 - [ ] Boundary `--cov-fail-under=85` 통과
 
@@ -374,16 +374,16 @@ Concept → Business Rule → Scenario → Acceptance Criteria
 | GREEN 커밋 | 테스트 수 | 상태 |
 |-----------|----------|------|
 | G-C-01 | 4 | ✅ 진행됨 |
-| G-C-02 | 3 | ⬜ 다음 |
-| G-C-03 | 2 | ⬜ |
-| G-C-04 | 2 | ⬜ |
-| G-C-05 | 1 | ⬜ |
-| G-C-06 | 2 | ⬜ |
-| G-C-07 | 5 | ⬜ |
-| G-C-B1~B6 | 12 | ⬜ |
-| G-C-08 | 3 | ⬜ |
+| G-C-02 | 3 | ✅ 진행됨 |
+| G-C-03 | 2 | ✅ 진행됨 |
+| G-C-04 | 2 | ✅ 진행됨 |
+| G-C-05 | 1 | ✅ 진행됨 |
+| G-C-06 | 2 | ✅ 진행됨 |
+| G-C-07 | 5 | ✅ 진행됨 |
+| G-C-08 | 3 | ✅ 진행됨 |
+| G-C-B1~B6 | 12 | ✅ 진행됨 |
 
-**다음 작업:** **G-C-02** — `test_empty_list_*`, `test_four_empty_rows_*`, `test_3x4_*` (3건)
+**다음 작업:** Track A·B GREEN 완료 — REFACTOR / coverage gate / defect_list 정리
 
 ---
 

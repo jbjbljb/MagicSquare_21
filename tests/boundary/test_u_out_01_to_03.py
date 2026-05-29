@@ -14,14 +14,9 @@ from src.boundary.contracts import CELL_VALUE_MAX, CELL_VALUE_MIN, GRID_SIZE
 from src.boundary.ports import CompletionResolverPort
 from src.boundary.ui_boundary import UIBoundary
 
-_G1: list[list[int]] = [
-    [16, 2, 3, 13],
-    [5, 11, 0, 8],
-    [9, 6, 0, 12],
-    [4, 14, 15, 1],
-]
+from tests.conftest import G1
 
-_MOCK_SOLUTION: list[int] = [2, 2, 7, 3, 3, 10]
+_MOCK_SOLUTION: list[int] = [1, 2, 2, 3, 4, 12]
 
 
 @pytest.fixture
@@ -47,7 +42,7 @@ class TestUOut01To03:
         """U-OUT-01 — Success.result is int[6]."""
         # U-OUT-01
         # Given
-        grid = _G1
+        grid = [row[:] for row in G1]
 
         # When
         result = ui_boundary.solve(grid)
@@ -62,7 +57,7 @@ class TestUOut01To03:
         """U-OUT-02 — r,c ∈ [1,4]; n ∈ [1,16]."""
         # U-OUT-02
         # Given
-        grid = _G1
+        grid = [row[:] for row in G1]
 
         # When
         result = ui_boundary.solve(grid)
@@ -83,7 +78,7 @@ class TestUOut01To03:
         """U-OUT-03 — n1 < n2 in [r1,c1,n1,r2,c2,n2] (OUT-03)."""
         # U-OUT-03
         # Given
-        grid = _G1
+        grid = [row[:] for row in G1]
 
         # When
         result = ui_boundary.solve(grid)
