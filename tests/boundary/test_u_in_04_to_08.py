@@ -2,7 +2,7 @@
 Track A — U-IN-03~08 input validation RED skeletons.
 
 Report/08·09 design: empty count, range, duplicate; U-IN-07/08 extensions.
-Domain execute must not run (U-FLOW-02); U-IN-03~05b Full RED, U-IN-06~08 skeleton.
+Domain execute must not run (U-FLOW-02); U-IN-03~06 Full RED, U-IN-07~08 skeleton.
 """
 
 from __future__ import annotations
@@ -12,6 +12,8 @@ import pytest
 from src.boundary.contracts import (
     CELL_RANGE_CODE,
     CELL_RANGE_MESSAGE,
+    DUPLICATE_CODE,
+    DUPLICATE_MESSAGE,
     EMPTY_COUNT_CODE,
     EMPTY_COUNT_MESSAGE,
 )
@@ -50,13 +52,13 @@ _MATRIX_CELL_NEG1: list[list[int]] = [
     [4, 14, 15, -1],
 ]
 
-# U-IN-06 matrix: non-zero duplicate
-# _MATRIX_DUPLICATE: list[list[int]] = [
-#     [16, 2, 3, 13],
-#     [5, 11, 0, 8],
-#     [9, 7, 0, 12],
-#     [4, 14, 7, 7],
-# ]
+# U-IN-06 matrix: 4×4, two blanks, non-zero duplicate 7
+_MATRIX_DUPLICATE: list[list[int]] = [
+    [16, 2, 3, 13],
+    [5, 11, 0, 8],
+    [9, 7, 0, 12],
+    [4, 14, 7, 7],
+]
 
 # U-IN-07 matrix: PRD RD-04, one blank
 # _MATRIX_ONE_BLANK: list[list[int]] = [
@@ -152,11 +154,17 @@ class TestUIn04To08:
         self, input_validator: InputValidator
     ) -> None:
         """U-IN-06 — non-zero duplicate → Failure E005."""
+        # U-IN-06
         # Given
-        # matrix = _MATRIX_DUPLICATE
+        matrix = _MATRIX_DUPLICATE
+
         # When
-        # result = input_validator.validate(matrix)
-        pytest.fail("RED: U-IN-06 — non-zero duplicate → E005")
+        result = input_validator.validate(matrix)
+
+        # Then
+        assert isinstance(result, FailureResult)
+        assert result.code == DUPLICATE_CODE
+        assert result.message == DUPLICATE_MESSAGE
 
     def test_u_in_07_one_blank_returns_e002(
         self, input_validator: InputValidator

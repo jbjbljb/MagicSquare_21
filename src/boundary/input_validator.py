@@ -8,6 +8,8 @@ from src.boundary.contracts import (
     CELL_RANGE_MESSAGE,
     CELL_VALUE_MAX,
     CELL_VALUE_MIN,
+    DUPLICATE_CODE,
+    DUPLICATE_MESSAGE,
     EMPTY_COUNT_CODE,
     EMPTY_COUNT_MESSAGE,
     GRID_SIZE,
@@ -30,6 +32,7 @@ class InputValidator:
         GREEN (AC-FR-01-01): grid is None; shape must be GRID_SIZE x GRID_SIZE.
         GREEN (U-IN-03~04): blank count must be REQUIRED_BLANK_COUNT.
         GREEN (U-IN-05~05b): cell values must be BLANK_CELL_VALUE or CELL_VALUE_MIN..MAX.
+        GREEN (U-IN-06): non-zero values must be unique.
         """
         if grid is None:
             return FailureResult(
@@ -64,4 +67,15 @@ class InputValidator:
                         code=CELL_RANGE_CODE,
                         message=CELL_RANGE_MESSAGE,
                     )
+        seen: set[int] = set()
+        for row in grid:
+            for cell in row:
+                if cell == BLANK_CELL_VALUE:
+                    continue
+                if cell in seen:
+                    return FailureResult(
+                        code=DUPLICATE_CODE,
+                        message=DUPLICATE_MESSAGE,
+                    )
+                seen.add(cell)
         return None

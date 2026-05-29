@@ -16,3 +16,6 @@ EMPTY_COUNT_MESSAGE = "빈칸(0)은 정확히 2개여야 합니다."
 
 CELL_RANGE_CODE = "E004"
 CELL_RANGE_MESSAGE = "셀 값은 0 또는 1~16이어야 합니다."
+
+DUPLICATE_CODE = "E005"
+DUPLICATE_MESSAGE = "0을 제외한 값은 중복될 수 없습니다."

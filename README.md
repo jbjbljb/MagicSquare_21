@@ -289,9 +289,9 @@ Concept → Business Rule → Scenario → Acceptance Criteria
 
 #### G-C-05 · duplicate (U-IN-06) — 1건
 
-- [ ] U-IN-06 — `test_u_in_06_duplicate_non_zero_returns_e005`
-- [ ] **구현:** non-zero 중복 → `E005`
-- [ ] **검증:** U-IN-06 + 이전 GREEN 회귀
+- [x] U-IN-06 — `test_u_in_06_duplicate_non_zero_returns_e005`
+- [x] **구현:** non-zero 중복 → `E005`
+- [x] **검증:** U-IN-06 + 이전 GREEN 회귀
 
 #### G-C-06 · empty count 확장 + short-circuit (U-IN-07, 08) — 2건
 
