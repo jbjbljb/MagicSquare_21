@@ -14,6 +14,7 @@
 | [08_dual_track_red_design_report_2026-05-29.md](./08_dual_track_red_design_report_2026-05-29.md) | **Dual-Track RED 설계표** (FR-01~FR-05, Track A/B, 코드 없음) |
 | [09_dual_track_red_skeleton_work_report_2026-05-29.md](./09_dual_track_red_skeleton_work_report_2026-05-29.md) | **Dual-Track RED Skeleton** pytest 26건 (`pytest.fail`, `src/` 미작성) |
 | [10_green_phase_stabilize_work_report_2026-05-29.md](./10_green_phase_stabilize_work_report_2026-05-29.md) | **GREEN Phase** `stabilize/green` · G-C-01 null 입력 · README GREEN To-Do |
+| [11_green_phase_track_ab_complete_work_report_2026-05-29.md](./11_green_phase_track_ab_complete_work_report_2026-05-29.md) | **GREEN Phase** Track A G-C-02~08 · Track B G-C-B1~B6 · 35 pytest PASS · RD-01 G1 |
 
 프로젝트 개요는 [루트 README.md](../README.md)를 참고하세요.  
-대화 Transcript: [Prompt/07](../Prompt/07_export_transcript_red_phase_tdd_2026-05-29.md) · [Prompt/08](../Prompt/08_export_transcript_dual_track_red_design_2026-05-29.md) · [Prompt/09](../Prompt/09_export_transcript_dual_track_red_skeleton_2026-05-29.md) · [Prompt/10](../Prompt/10_export_transcript_green_phase_stabilize_2026-05-29.md)
+대화 Transcript: [Prompt/07](../Prompt/07_export_transcript_red_phase_tdd_2026-05-29.md) · [Prompt/08](../Prompt/08_export_transcript_dual_track_red_design_2026-05-29.md) · [Prompt/09](../Prompt/09_export_transcript_dual_track_red_skeleton_2026-05-29.md) · [Prompt/10](../Prompt/10_export_transcript_green_phase_stabilize_2026-05-29.md) · [Prompt/11](../Prompt/11_export_transcript_green_phase_track_ab_2026-05-29.md)
