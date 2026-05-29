@@ -2,7 +2,7 @@
 Track A — U-IN-03~08 input validation RED skeletons.
 
 Report/08·09 design: empty count, range, duplicate; U-IN-07/08 extensions.
-Domain execute must not run (U-FLOW-02); U-IN-03~06 Full RED, U-IN-07~08 skeleton.
+Domain execute must not run (U-FLOW-02); U-IN-03~08 Full RED.
 """
 
 from __future__ import annotations
@@ -61,20 +61,20 @@ _MATRIX_DUPLICATE: list[list[int]] = [
 ]
 
 # U-IN-07 matrix: PRD RD-04, one blank
-# _MATRIX_ONE_BLANK: list[list[int]] = [
-#     [16, 2, 3, 13],
-#     [5, 11, 10, 8],
-#     [9, 7, 6, 12],
-#     [0, 14, 15, 1],
-# ]
+_MATRIX_ONE_BLANK: list[list[int]] = [
+    [16, 2, 3, 13],
+    [5, 11, 10, 8],
+    [9, 7, 6, 12],
+    [0, 14, 15, 1],
+]
 
 # U-IN-08 matrix: three blanks + out-of-range (short-circuit → E002 before E004)
-# _MATRIX_ORDER_PROBE: list[list[int]] = [
-#     [16, 2, 3, 13],
-#     [5, 11, 0, 8],
-#     [9, 7, 0, 17],
-#     [0, 14, 15, 1],
-# ]
+_MATRIX_ORDER_PROBE: list[list[int]] = [
+    [16, 2, 3, 13],
+    [5, 11, 0, 8],
+    [9, 7, 0, 17],
+    [0, 14, 15, 1],
+]
 
 
 @pytest.fixture
@@ -170,20 +170,31 @@ class TestUIn04To08:
         self, input_validator: InputValidator
     ) -> None:
         """U-IN-07 — PRD RD-04 single blank → Failure E002."""
+        # U-IN-07
         # Given
-        # matrix = _MATRIX_ONE_BLANK
+        matrix = _MATRIX_ONE_BLANK
+
         # When
-        # result = input_validator.validate(matrix)
-        pytest.fail("RED: U-IN-07 — one blank (≠2) → E002")
+        result = input_validator.validate(matrix)
+
+        # Then
+        assert isinstance(result, FailureResult)
+        assert result.code == EMPTY_COUNT_CODE
+        assert result.message == EMPTY_COUNT_MESSAGE
 
     def test_u_in_08_empty_count_short_circuits_before_range(
         self, input_validator: InputValidator
     ) -> None:
         """U-IN-08 — 3 blanks + range violation → E002 (not E004/E005)."""
+        # U-IN-08
         # Given
-        # matrix = _MATRIX_ORDER_PROBE
+        matrix = _MATRIX_ORDER_PROBE
+
         # When
-        # result = input_validator.validate(matrix)
-        pytest.fail(
-            "RED: U-IN-08 — validation order: empty count before range → E002"
-        )
+        result = input_validator.validate(matrix)
+
+        # Then
+        assert isinstance(result, FailureResult)
+        assert result.code == EMPTY_COUNT_CODE
+        assert result.message == EMPTY_COUNT_MESSAGE
+        assert result.code != CELL_RANGE_CODE

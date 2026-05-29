@@ -295,10 +295,10 @@ Concept → Business Rule → Scenario → Acceptance Criteria
 
 #### G-C-06 · empty count 확장 + short-circuit (U-IN-07, 08) — 2건
 
-- [ ] U-IN-07 — `test_u_in_07_one_blank_returns_e002` (빈칸 1개)
-- [ ] U-IN-08 — `test_u_in_08_empty_count_short_circuits_before_range`
-- [ ] **구현:** 1 blank → `E002` / empty count가 range보다 선행
-- [ ] **검증:** U-IN-07~08 + 이전 GREEN 회귀
+- [x] U-IN-07 — `test_u_in_07_one_blank_returns_e002` (빈칸 1개)
+- [x] U-IN-08 — `test_u_in_08_empty_count_short_circuits_before_range`
+- [x] **구현:** 1 blank → `E002` / empty count가 range보다 선행
+- [x] **검증:** U-IN-07~08 + 이전 GREEN 회귀
 
 #### G-C-07 · Domain 격리 (U-FLOW-02) — 5건
 
